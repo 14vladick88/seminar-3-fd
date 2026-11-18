@@ -1,0 +1,13 @@
+.gradle/
+.kotlin/
+.idea/
+**/build/
+*.iml
+.DS_Store
+*.pptx
+.teacher/
+
+# Локальный черновик исходного IDEA-проекта; задания находятся в task01–task05.
+/src/
+
+/PLAN_FOR_LEAD.md
