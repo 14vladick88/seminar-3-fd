@@ -8,7 +8,7 @@ abstract class Delivery(val destination: String) {
     abstract fun cost(weightKg: Int): Int
 
     fun label(weightKg: Int): String {
-        TODO("Используйте полиморфный вызов cost")
+        TODO("Сформируйте описание доставки")
     }
 }
 
