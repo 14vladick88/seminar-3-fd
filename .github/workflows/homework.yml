@@ -1,0 +1,42 @@
+name: Отправить домашку на проверку
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+    paths:
+      - 'homework/**'
+permissions:
+  contents: read
+  statuses: write
+jobs:
+  dispatch:
+    if: github.repository == 'Slava-ne-Merlow/seminar-3-fd'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      # Never check out or run PR code in this workflow.
+      - name: Отметить начало проверки в PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh api --method POST "repos/Slava-ne-Merlow/seminar-3-fd/statuses/$HEAD_SHA" \
+            -f state=pending -f 'context=Домашняя работа / скрытая проверка' \
+            -f 'description=Ожидаем результат приватной проверки.'
+      - name: Запустить приватную проверку
+        env:
+          GH_TOKEN: ${{ secrets.HOMEWORK_DISPATCH_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh api --method POST repos/Slava-ne-Merlow/seminar-homework-checker/actions/workflows/check.yml/dispatches \
+            -f ref=main -f "inputs[pr_number]=$PR_NUMBER" -f "inputs[head_sha]=$HEAD_SHA"
+      - name: Сообщить об ошибке запуска
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh api --method POST "repos/Slava-ne-Merlow/seminar-3-fd/statuses/$HEAD_SHA" \
+            -f state=error -f 'context=Домашняя работа / скрытая проверка' \
+            -f 'description=Не удалось запустить проверку. Сообщите преподавателю.'
