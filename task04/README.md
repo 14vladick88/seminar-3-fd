@@ -1,4 +1,4 @@
-# 04. Доставка · 20 минут
+# 04. Доставка
 
 Откройте [Delivery.kt](src/main/kotlin/seminar/task04/Delivery.kt).
 

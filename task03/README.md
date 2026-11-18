@@ -1,4 +1,4 @@
-# 03. Проездной · 20 минут
+# 03. Проездной
 
 Откройте [TravelCard.kt](src/main/kotlin/seminar/task03/TravelCard.kt) и закончите класс `TravelCard`.
 
