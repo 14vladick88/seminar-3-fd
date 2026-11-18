@@ -14,7 +14,7 @@ TITLES = {
 }
 
 
-def render(module, directory):
+def render(module, directory, test_exit_code="0"):
     files = sorted(directory.glob("TEST-*.xml"))
     lines = [TITLES[module], ""]
     if not files:
@@ -22,9 +22,12 @@ def render(module, directory):
             "Тесты не запустились.",
             "Откройте шаг «Проверить решение»: там указана причина.",
             "Возможна ошибка компиляции, загрузки зависимостей или настройки Java.",
-        ]) + "\n"
+        ]) + "\n", False
 
-    cases = [case for file in files for case in ET.parse(file).getroot().iter("testcase")]
+    try:
+        cases = [case for file in files for case in ET.parse(file).getroot().iter("testcase")]
+    except (ET.ParseError, OSError):
+        return "\n".join(lines + ["Не удалось прочитать отчёт. Откройте шаг «Проверить решение»."]) + "\n", False
     results = []
     for case in cases:
         failure = case.find("failure")
@@ -56,16 +59,19 @@ def render(module, directory):
         lines.append("В отчёте нет проверок. Откройте шаг «Проверить решение».")
     elif has_todo:
         lines.append("Замените TODO своим кодом и отправьте новый commit и push.")
-    elif passed == len(cases):
+    elif passed == len(cases) and test_exit_code == "0":
         lines.append("Все проверки задачи пройдены!")
-    return "\n".join(lines).rstrip() + "\n"
+    if test_exit_code != "0":
+        lines += ["", "Запуск завершился с ошибкой или не был завершён. Подробности — в шаге «Проверить решение»."]
+    success = bool(cases) and passed == len(cases) and test_exit_code == "0"
+    return "\n".join(lines).rstrip() + "\n", success
 
 
 def main():
     if len(sys.argv) != 2 or sys.argv[1] not in TITLES:
         raise SystemExit("Укажите задачу: task01 … task05")
     module = sys.argv[1]
-    text = render(module, Path(module, "build/test-results/test"))
+    text, success = render(module, Path(module, "build/test-results/test"), os.environ.get("TEST_EXIT_CODE", "0"))
     print(text, end="")
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         # Keep exception text literal, including <, >, Markdown, and backticks.
@@ -74,6 +80,8 @@ def main():
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
             output.write(f"{fence}text\n{text}{fence}\n\n")
 
+    return 0 if success else 1
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

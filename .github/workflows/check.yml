@@ -40,9 +40,17 @@ jobs:
           java-version: '17'
           cache: gradle
       - name: Проверить решение
-        run: bash ./gradlew :${{ matrix.task }}:test --console=plain --no-daemon
+        id: tests
+        run: |
+          if bash ./gradlew :${{ matrix.task }}:test --console=plain --no-daemon; then
+            echo "exit_code=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          fi
       - name: Показать результаты
         if: always()
+        env:
+          TEST_EXIT_CODE: ${{ steps.tests.outputs.exit_code }}
         run: python3 .github/scripts/summary.py ${{ matrix.task }}
       - name: Сохранить HTML и XML отчёты
         if: always()
