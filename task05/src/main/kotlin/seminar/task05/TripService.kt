@@ -18,5 +18,7 @@ class TravelCard(initialTrips: Int) {
 
 // Реализуйте только этот класс.
 class TripService(private val notifier: Notifier) {
-    fun travel(card: TravelCard): Boolean = TODO("Выполните поездку и сообщите об успехе")
+    fun travel(card: TravelCard): Boolean {
+        TODO("Выполните поездку и сообщите об успехе")
+    }
 }

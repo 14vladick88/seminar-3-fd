@@ -7,13 +7,19 @@ abstract class Delivery(val destination: String) {
 
     abstract fun cost(weightKg: Int): Int
 
-    fun label(weightKg: Int): String = TODO("Используйте полиморфный вызов cost")
+    fun label(weightKg: Int): String {
+        TODO("Используйте полиморфный вызов cost")
+    }
 }
 
 class Pickup(destination: String) : Delivery(destination) {
-    override fun cost(weightKg: Int): Int = TODO("Стоимость самовывоза")
+    override fun cost(weightKg: Int): Int {
+        TODO("Стоимость самовывоза")
+    }
 }
 
 class CourierDelivery(destination: String) : Delivery(destination) {
-    override fun cost(weightKg: Int): Int = TODO("Стоимость курьерской доставки")
+    override fun cost(weightKg: Int): Int {
+        TODO("Стоимость курьерской доставки")
+    }
 }

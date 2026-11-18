@@ -12,5 +12,7 @@ class TravelCard(initialTrips: Int) {
         TODO("Проверьте аргумент и пополните карту")
     }
 
-    fun ride(): Boolean = TODO("Спишите одну поездку, если она есть")
+    fun ride(): Boolean {
+        TODO("Спишите одну поездку, если она есть")
+    }
 }
