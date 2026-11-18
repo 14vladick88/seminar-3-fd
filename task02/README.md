@@ -31,8 +31,6 @@
 
 Верните результат из функции. Читать ввод и печатать ответ не нужно.
 
-Проверка: `./gradlew :task02:test` (Windows: `.\gradlew.bat :task02:test`).
-
 <details><summary>Подсказка по Kotlin</summary>
 
 `n.toString(2)` и `bits.toInt(2)` переводят число в двоичную строку и обратно.

@@ -26,8 +26,6 @@
 
 Верните результат из функции. Читать ввод и печатать ответ не нужно.
 
-Проверка: `./gradlew :task01:test` (Windows: `.\gradlew.bat :task01:test`).
-
 <details><summary>Подсказка по Kotlin</summary>
 
 `n.toString(2)` — двоичная запись числа. `"101".toInt(2)` — число из двоичной записи.

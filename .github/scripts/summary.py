@@ -1,33 +1,79 @@
-"""Publish JUnit results to the GitHub Actions run summary (standard library only)."""
-import html
+"""Readable console results and a preformatted GitHub Actions summary."""
 import os
+import re
 import sys
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-module = sys.argv[1]
-if module not in {f"task{i:02}" for i in range(1, 6)}:
-    raise SystemExit("Unknown task")
-files = sorted(Path(module, "build/test-results/test").glob("TEST-*.xml"))
-lines = [f"### {module}", ""]
-if not files:
-    lines += ["Тесты не запустились. Откройте шаг «Проверить решение»: возможна ошибка компиляции, загрузки зависимостей или настройки Java."]
-else:
+TITLES = {
+    "task01": "01 · Два дополнительных разряда",
+    "task02": "02 · Биты чётности",
+    "task03": "03 · Проездной",
+    "task04": "04 · Доставка",
+    "task05": "05 · Уведомление о поездке",
+}
+
+
+def render(module, directory):
+    files = sorted(directory.glob("TEST-*.xml"))
+    lines = [TITLES[module], ""]
+    if not files:
+        return "\n".join(lines + [
+            "Тесты не запустились.",
+            "Откройте шаг «Проверить решение»: там указана причина.",
+            "Возможна ошибка компиляции, загрузки зависимостей или настройки Java.",
+        ]) + "\n"
+
     cases = [case for file in files for case in ET.parse(file).getroot().iter("testcase")]
-    failed = sum(case.find("failure") is not None or case.find("error") is not None for case in cases)
-    skipped = sum(case.find("skipped") is not None for case in cases)
-    lines += [f"Пройдено: **{len(cases) - failed - skipped}/{len(cases)}**. Ошибок: {failed}. Пропущено: {skipped}.", ""]
+    results = []
     for case in cases:
         failure = case.find("failure")
         if failure is None:
             failure = case.find("error")
-        icon = "❌" if failure is not None else ("⏭️" if case.find("skipped") is not None else "✅")
-        lines.append(f"- {icon} {html.escape(case.get('name', 'test'))}")
+        state = "failed" if failure is not None else ("skipped" if case.find("skipped") is not None else "passed")
+        results.append((case, failure, state))
+    passed = sum(state == "passed" for _, _, state in results)
+    failed = sum(state == "failed" for _, _, state in results)
+    skipped = sum(state == "skipped" for _, _, state in results)
+    lines += [f"Пройдено: {passed} из {len(cases)} · Не пройдено: {failed} · Пропущено: {skipped}", ""]
+    has_todo = False
+    for case, failure, state in results:
+        name = case.get("name", "Проверка").removesuffix("()")
+        icon = {"failed": "❌", "skipped": "⏭", "passed": "✅"}[state]
+        lines.append(f"{icon} {name}")
         if failure is not None:
-            lines.append(f"  <pre>{html.escape(failure.get('message', '')[:1500])}</pre>")
-    lines += ["", "`NotImplementedError` означает, что в решении ещё есть TODO. Красные проверки нерешённых задач ожидаемы."]
-text = "\n".join(lines) + "\n"
-print(text, end="")
-if os.environ.get("GITHUB_STEP_SUMMARY"):
-    with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
-        output.write(text)
+            message = (failure.get("message") or (failure.text or "").split("\n")[0]).strip()
+            if "NotImplementedError" in message:
+                has_todo = True
+                detail = message.partition("An operation is not implemented:")[2].strip()
+                message = "В решении остался TODO." + (f" {detail}" if detail else "")
+            else:
+                message = re.sub(r"^(?:org\.opentest4j\.AssertionFailedError|java\.lang\.AssertionError):\s*", "", message)
+            for line in (message or "Подробности — в шаге «Проверить решение».")[:1500].splitlines():
+                lines.append(f"   {line}")
+        lines.append("")
+    if not cases:
+        lines.append("В отчёте нет проверок. Откройте шаг «Проверить решение».")
+    elif has_todo:
+        lines.append("Замените TODO своим кодом и отправьте новый commit и push.")
+    elif passed == len(cases):
+        lines.append("Все проверки задачи пройдены!")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def main():
+    if len(sys.argv) != 2 or sys.argv[1] not in TITLES:
+        raise SystemExit("Укажите задачу: task01 … task05")
+    module = sys.argv[1]
+    text = render(module, Path(module, "build/test-results/test"))
+    print(text, end="")
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        # Keep exception text literal, including <, >, Markdown, and backticks.
+        longest = max((len(match) for match in re.findall(r"`+", text)), default=0)
+        fence = "`" * max(3, longest + 1)
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as output:
+            output.write(f"{fence}text\n{text}{fence}\n\n")
+
+
+if __name__ == "__main__":
+    main()

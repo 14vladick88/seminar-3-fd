@@ -23,4 +23,3 @@ for (delivery in deliveries) println(delivery.label(3))
 
 Добавление нового потомка `Delivery` не должно требовать изменения `label`.
 Один из тестов передаст собственный вид доставки — это проверяет полиморфизм.
-Проверка: `./gradlew :task04:test` (Windows: `.\gradlew.bat :task04:test`).

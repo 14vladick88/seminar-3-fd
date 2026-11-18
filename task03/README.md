@@ -20,7 +20,6 @@ println(card.remainingTrips)   // 2
 ```
 
 Не заменяйте класс общими переменными или `object`. Сохраните сигнатуры из заготовки.
-Проверка: `./gradlew :task03:test` (Windows: `.\gradlew.bat :task03:test`).
 
 <details><summary>Подсказка</summary>
 
