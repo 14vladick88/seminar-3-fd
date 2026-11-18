@@ -1,7 +1,7 @@
 # 04. Доставка · 20 минут
 
 Темы: абстрактный класс, наследование, `override`, полиморфизм.
-Откройте `src/main/kotlin/seminar/task04/Delivery.kt`.
+Откройте [Delivery.kt](src/main/kotlin/seminar/task04/Delivery.kt).
 
 Закончите три класса:
 

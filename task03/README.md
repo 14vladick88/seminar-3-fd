@@ -1,7 +1,7 @@
 # 03. Проездной · 20 минут
 
 Темы: класс, первичный конструктор, `init`, `require`, состояние, `private set`.
-Откройте `src/main/kotlin/seminar/task03/TravelCard.kt` и закончите класс `TravelCard`.
+Откройте [TravelCard.kt](src/main/kotlin/seminar/task03/TravelCard.kt) и закончите класс `TravelCard`.
 
 Контракт:
 

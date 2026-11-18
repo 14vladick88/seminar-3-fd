@@ -9,7 +9,7 @@
 Например, для N = 6: `110 → 11000`, поэтому R = 24.
 Для N = 5: `101 → 10111`, поэтому R = 23.
 
-В файле `src/main/kotlin/seminar/task01/BinarySuffix.kt` реализуйте две функции:
+В файле [BinarySuffix.kt](src/main/kotlin/seminar/task01/BinarySuffix.kt) реализуйте две функции:
 
 - `transform(n: Int): Int` — возвращает R для заданного N.
 - `maxNBelow(limit: Int): Int` — возвращает **наибольшее N**, для которого R **строго меньше** limit. Если такого натурального N нет, верните 0.

@@ -14,7 +14,7 @@
 - Новая сумма равна 4, после второго шага получаем `11110`.
 - Результат R = 30.
 
-В файле `src/main/kotlin/seminar/task02/ParityBits.kt` реализуйте две функции:
+В файле [ParityBits.kt](src/main/kotlin/seminar/task02/ParityBits.kt) реализуйте две функции:
 
 - `transform(n: Int): Int` — возвращает R для заданного N.
 - `minNAbove(limit: Int): Int` — возвращает **наименьшее N**, для которого R **строго больше** limit.

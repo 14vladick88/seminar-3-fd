@@ -1,7 +1,7 @@
 # 05. Уведомление о поездке · дополнительно, 15 минут
 
 Темы: интерфейс, композиция, передача зависимости через конструктор.
-Откройте `src/main/kotlin/seminar/task05/TripService.kt`.
+Откройте [TripService.kt](src/main/kotlin/seminar/task05/TripService.kt).
 
 Интерфейс `Notifier` и рабочий `TravelCard` уже даны. Это отдельные типы в пакете `seminar.task05`,
 поэтому задачу можно решать независимо от task03. Не изменяйте их.
