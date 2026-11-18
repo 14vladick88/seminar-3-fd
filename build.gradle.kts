@@ -8,7 +8,7 @@ plugins {
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     repositories { mavenCentral() }
-    extensions.configure<KotlinJvmProjectExtension> { jvmToolchain(17) }
+    extensions.configure<KotlinJvmProjectExtension> { jvmToolchain(26) }
     dependencies {
         "testImplementation"(kotlin("test-junit5"))
         "testRuntimeOnly"("org.junit.platform:junit-platform-launcher")

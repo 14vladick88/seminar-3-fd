@@ -33,11 +33,11 @@ jobs:
     steps:
       - name: Получить код
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: Установить JDK 17
+      - name: Установить JDK 26
         uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '26'
           cache: gradle
       - name: Проверить решение
         id: tests
