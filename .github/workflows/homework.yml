@@ -21,7 +21,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           gh api --method POST "repos/Slava-ne-Merlow/seminar-3-fd/statuses/$HEAD_SHA" \
-            -f state=pending -f 'context=Домашняя работа / скрытая проверка' \
+            -f state=pending -f 'context=Домашняя работа / проверка' \
             -f 'description=Ожидаем результат приватной проверки.'
       - name: Запустить приватную проверку
         env:
@@ -38,5 +38,5 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           gh api --method POST "repos/Slava-ne-Merlow/seminar-3-fd/statuses/$HEAD_SHA" \
-            -f state=error -f 'context=Домашняя работа / скрытая проверка' \
+            -f state=error -f 'context=Домашняя работа / проверка' \
             -f 'description=Не удалось запустить проверку. Сообщите преподавателю.'
