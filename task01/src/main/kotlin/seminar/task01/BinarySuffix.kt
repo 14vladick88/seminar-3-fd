@@ -7,13 +7,19 @@ fun transform(n: Int): Int {
         s += "00"
     } else {
         s += "11"
-
-
     }
 
     return s.toInt(2)
 }
 
 fun maxNBelow(limit: Int): Int {
-    TODO("Найдите максимальное N, для которого R < limit")
+    var answer = 0
+
+    for (i in 1..10_000) {
+        if (transform(i) < limit){
+            answer = i
+        }
+    }
+
+    return answer
 }
