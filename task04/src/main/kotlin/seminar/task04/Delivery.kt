@@ -16,5 +16,34 @@ abstract class Delivery(
     }
 }
 
+class Pickup(destination: String)
+    : Delivery(destination) {
+
+    override fun cost(weightKg: Int): Int {
+        require(weightKg > 0)
+        return 0
+    }
+}
+
+class CourierDelivery(destination: String)
+    : Delivery(destination) {
+
+    override fun cost(weightKg: Int): Int {
+        require(weightKg > 0)
+        return 200 + 50 * weightKg
+    }
+}
 
 
+class ExpressDelivery(
+    destination: String,
+    private val distance: Int
+) : Delivery(destination) {
+    init {
+        require(distance > 0)
+    }
+    override fun cost(weightKg: Int): Int {
+        require(weightKg in 1..10)
+        return 300 + 80 * weightKg + distance * 20
+    }
+}
