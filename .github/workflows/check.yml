@@ -2,6 +2,11 @@ name: Проверка заданий
 
 on:
   push:
+    branches: [main, master]
+    paths-ignore:
+      - 'homework/**'
+      - 'HOMEWORK.md'
+      - '.github/workflows/homework.yml'
   workflow_dispatch:
 
 permissions:
