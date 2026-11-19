@@ -7,6 +7,8 @@ fun transform(n: Int): Int {
         s += "00"
     } else {
         s += "11"
+
+
     }
 
     return s.toInt(2)
