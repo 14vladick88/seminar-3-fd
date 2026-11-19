@@ -7,7 +7,7 @@ import seminar.task03.TravelCard
 
 fun main() {
     println("Здесь можно вызывать функции и классы из заданий.")
-
+    println("Тестовый ккоммиь")
     // Раскомментируйте нужный вызов после реализации функции.
     // println(transformTask01(129))
     // println(transformTask02(131))
